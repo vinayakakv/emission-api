@@ -1,0 +1,11 @@
+{
+  "name": "emissions-api",
+  "version": "1.0.0",
+  "description": "API to query greenhouse gas emissions",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC"
+}
