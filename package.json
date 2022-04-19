@@ -4,8 +4,17 @@
   "description": "API to query greenhouse gas emissions",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "prepare": "husky install"
   },
   "author": "",
-  "license": "ISC"
+  "license": "ISC",
+  "devDependencies": {
+    "husky": "^7.0.4",
+    "lint-staged": "^12.3.8",
+    "prettier": "^2.6.2"
+  },
+  "lint-staged": {
+    "*.{js,css,md,ts,json}": "prettier --write"
+  }
 }
