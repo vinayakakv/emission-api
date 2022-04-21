@@ -25,6 +25,9 @@
     "*.{js,css,md,ts,json}": "prettier --write"
   },
   "dependencies": {
-    "express": "^4.17.3"
+    "express": "^4.17.3",
+    "sqlite3": "^5.0.4",
+    "typeorm": "^0.3.6",
+    "typeorm-extension": "^2.0.1"
   }
 }

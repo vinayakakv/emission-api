@@ -14,7 +14,9 @@
     "isolatedModules": true,
     "downlevelIteration": true,
     "incremental": true,
-    "baseUrl": "src"
+    "baseUrl": "src",
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true
   },
   "include": ["src/**/*.ts"],
   "exclude": ["node_modules"]
