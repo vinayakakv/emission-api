@@ -1,8 +1,12 @@
-import { initDb, countryRepository, emissionsRepository } from "./db";
+import { datasource, initDb } from "./db";
 import { promises as fs } from "fs";
+import { Country } from "./models/country";
+import { Emission } from "./models/emissions";
 
 const seedData = async () => {
   await initDb();
+  const countryRepository = datasource.getRepository(Country);
+  const emissionsRepository = datasource.getRepository(Emission);
   const countries: { country_id: string }[] = JSON.parse(
     await fs.readFile("data/countries.json", "utf-8")
   );
