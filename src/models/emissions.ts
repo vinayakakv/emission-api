@@ -18,3 +18,11 @@ export class Emission {
   @Column()
   data!: string;
 }
+
+export type EmissionView = {
+  countryId: string;
+  emissions: {
+    year: number;
+    data: Record<string, number>;
+  }[];
+};
