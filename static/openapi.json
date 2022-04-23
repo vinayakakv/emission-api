@@ -1,0 +1,191 @@
+{
+  "openapi": "3.0.1",
+  "info": {
+    "title": "Emission API",
+    "description": "API Specification for [`emission-api`](https://github.com/vinayakakv/emission-api)",
+    "contact": {
+      "email": "me.vinayakakv@gmail.com"
+    },
+    "version": "1.0.0"
+  },
+  "servers": [
+    {
+      "url": "/api/"
+    }
+  ],
+  "tags": [
+    {
+      "name": "Emissons",
+      "description": "Set of endpoints to query emissons data"
+    }
+  ],
+  "paths": {
+    "/country": {
+      "get": {
+        "tags": ["Emissons"],
+        "summary": "Get a list of all the countries",
+        "description": "Get country code, name and possible values for startYear and endYear",
+        "responses": {
+          "200": {
+            "description": "successful",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/CountryView"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/country/{id}": {
+      "get": {
+        "tags": ["Emissons"],
+        "summary": "Get emissons for a given country",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "ID of the country to return emissions",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "startYear",
+            "in": "query",
+            "description": "Year from which to fetch the data",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "name": "endYear",
+            "in": "query",
+            "description": "Year (inclusive) till which to fetch the data",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "name": "data",
+            "in": "query",
+            "description": "List of datasets to fetch data",
+            "style": "form",
+            "explode": true,
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "enum": ["CO2", "HFCs", "CH4", "NF3", "N2O", "PFCs", "SF6"]
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/EmissionView"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "CountryView": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "ISO A3 Code of the country"
+          },
+          "name": {
+            "type": "string",
+            "description": "Name of the country as in the dataset"
+          },
+          "startYear": {
+            "type": "integer",
+            "description": "Starting year from which data for the country is available in the dataset",
+            "format": "year"
+          },
+          "endYear": {
+            "type": "integer",
+            "description": "Ending year till which data for the country is available in the dataset",
+            "format": "year"
+          }
+        }
+      },
+      "EmissionRecord": {
+        "type": "object",
+        "properties": {
+          "year": {
+            "type": "number",
+            "description": "Year of the emission data",
+            "format": "year"
+          },
+          "data": {
+            "type": "object",
+            "properties": {}
+          }
+        }
+      },
+      "EmissionView": {
+        "type": "object",
+        "properties": {
+          "countryId": {
+            "type": "string",
+            "description": "ISO A3 Code of the country for which emission data is queried"
+          },
+          "emissions": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/EmissionRecord"
+            }
+          }
+        }
+      },
+      "Error": {
+        "type": "object",
+        "properties": {
+          "message": {
+            "type": "string"
+          }
+        }
+      }
+    }
+  }
+}
