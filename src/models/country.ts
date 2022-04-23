@@ -13,6 +13,7 @@ export class Country {
 
 export type CountryView = {
   id: string;
+  name: string;
   startYear: number;
   endYear: number;
 };
