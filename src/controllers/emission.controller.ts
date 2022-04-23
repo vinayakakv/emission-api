@@ -1,3 +1,5 @@
+import { Dataset } from "../models/dataset";
+import { pickKeys } from "../utils";
 import { emissionsRepository } from "../db";
 import { EmissionView } from "../models/emissions";
 
@@ -6,19 +8,20 @@ export class EmissonController {
     countryId: string;
     startYear: number;
     endYear: number;
+    datasets: Dataset[];
   }): Promise<EmissionView> {
-    const { countryId, startYear, endYear } = args;
+    const { countryId, startYear, endYear, datasets } = args;
     const emissions = await emissionsRepository
       .createQueryBuilder("emissions")
       .where("emissions.country.id == :countryId", { countryId })
       .andWhere("emissions.year >= :startYear", { startYear })
-      .andWhere("emissions.year < :endYear", { endYear })
+      .andWhere("emissions.year <= :endYear", { endYear })
       .getMany();
     const emissionView: EmissionView = {
       countryId,
       emissions: emissions.map(({ year, data }) => ({
         year,
-        data: JSON.parse(data),
+        data: pickKeys(JSON.parse(data), datasets),
       })),
     };
     return emissionView;
