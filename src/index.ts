@@ -5,7 +5,7 @@ import { EmissonController } from "./controllers/emission.controller";
 import z from "zod";
 import { dataset } from "./models/dataset";
 const app = express();
-const port = 3000;
+const port = process.env.PORT || 3000;
 
 initDb();
 
@@ -49,11 +49,9 @@ app.get("/api/country/:id", async (req, res) => {
     return;
   }
   if (startYear > endYear) {
-    res
-      .status(400)
-      .json({
-        message: `startYear ${startYear} must be less than or equal to endYear ${endYear}`,
-      });
+    res.status(400).json({
+      message: `startYear ${startYear} must be less than or equal to endYear ${endYear}`,
+    });
     return;
   }
   const result = await EmissonController.getEmissions({
@@ -65,6 +63,6 @@ app.get("/api/country/:id", async (req, res) => {
   res.json(result);
 });
 
-app.listen(process.env.PORT || port, () => {
-  console.log(`Example app listening on port ${port}`);
+app.listen(port, () => {
+  console.log(`Emissions API listening on port ${port}`);
 });
