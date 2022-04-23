@@ -14,7 +14,16 @@
     "isolatedModules": true,
     "downlevelIteration": true,
     "incremental": true,
-    "baseUrl": "src"
+    "baseUrl": "src",
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
+    "paths": {
+      "@models": ["models"],
+      "@handlers": ["handlers"],
+      "@controllers": ["controllers"],
+      "@db": ["db"],
+      "@utils": ["utils"]
+    }
   },
   "include": ["src/**/*.ts"],
   "exclude": ["node_modules"]

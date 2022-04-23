@@ -1,11 +1,26 @@
+import { initDb } from "@db";
 import express from "express";
+import swaggerUi from "swagger-ui-express";
+import { getCountries, getEmissions } from "@handlers";
 const app = express();
-const port = 3000;
+const port = process.env.PORT || 3000;
 
-app.get("/", (req, res) => {
-  res.send("Hello World!");
-});
+initDb();
 
-app.listen(process.env.PORT || port, () => {
-  console.log(`Example app listening on port ${port}`);
+app.use("/static", express.static("static"));
+
+app.use(
+  "/api-docs",
+  swaggerUi.serve,
+  swaggerUi.setup(undefined, {
+    swaggerOptions: { url: "/static/openapi.yaml" },
+  })
+);
+
+app.get("/api/country", getCountries);
+
+app.get("/api/country/:id", getEmissions);
+
+app.listen(port, () => {
+  console.log(`Emissions API listening on port ${port}`);
 });
