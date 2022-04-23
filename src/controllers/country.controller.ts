@@ -1,4 +1,4 @@
-import { emissionsRepository } from "../db";
+import { countryRepository, emissionsRepository } from "../db";
 import { Country, CountryView } from "../models/country";
 
 export class CountryController {
@@ -17,5 +17,9 @@ export class CountryController {
       .groupBy("emission.country.id")
       .getRawMany();
     return countryViews;
+  }
+
+  static async getCountry(countryId: string) {
+    return countryRepository.findOneBy({ id: countryId });
   }
 }
