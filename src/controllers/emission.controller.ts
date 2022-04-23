@@ -1,7 +1,6 @@
-import { Dataset } from "../models/dataset";
+import { Dataset, EmissionView } from "../models";
 import { pickKeys } from "../utils";
 import { emissionsRepository } from "../db";
-import { EmissionView } from "../models/emissions";
 
 export class EmissonController {
   static async getEmissions(args: {

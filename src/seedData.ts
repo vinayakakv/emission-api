@@ -1,7 +1,6 @@
 import { datasource, initDb } from "./db";
 import { promises as fs } from "fs";
-import { Country } from "./models/country";
-import { Emission } from "./models/emissions";
+import { Country, Emission } from "./models";
 
 const seedData = async () => {
   await initDb();

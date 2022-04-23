@@ -1,5 +1,5 @@
 import { countryRepository, emissionsRepository } from "../db";
-import { Country, CountryView } from "../models/country";
+import { Country, CountryView } from "../models";
 
 export class CountryController {
   static async getCountries(): Promise<CountryView[]> {

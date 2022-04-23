@@ -1,5 +1,4 @@
-import { Country } from "./models/country";
-import { Emission } from "./models/emissions";
+import { Country, Emission } from "./models";
 import { DataSource } from "typeorm";
 import { createDatabase } from "typeorm-extension";
 

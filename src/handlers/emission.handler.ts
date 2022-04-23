@@ -1,8 +1,7 @@
-import { CountryController } from "controllers/country.controller";
-import { EmissonController } from "controllers/emission.controller";
+import { CountryController, EmissonController } from "../controllers";
 import { Request, Response } from "express";
 import z from "zod";
-import { dataset } from "../models/dataset";
+import { dataset } from "../models";
 
 const requestSchema = z.object({
   id: z
