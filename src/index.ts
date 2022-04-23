@@ -1,6 +1,6 @@
-import { initDb } from "./db";
+import { initDb } from "@db";
 import express from "express";
-import { getCountries, getEmissions } from "./handlers";
+import { getCountries, getEmissions } from "@handlers";
 const app = express();
 const port = process.env.PORT || 3000;
 

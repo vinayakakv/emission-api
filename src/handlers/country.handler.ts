@@ -1,4 +1,4 @@
-import { CountryController } from "../controllers";
+import { CountryController } from "@controllers";
 import { Request, Response } from "express";
 
 export const getCountries = async (req: Request, res: Response) => {
