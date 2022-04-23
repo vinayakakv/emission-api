@@ -1,20 +1,20 @@
 import { Country, Emission } from "@models";
-import { DataSource } from "typeorm";
+import { DataSource, DataSourceOptions } from "typeorm";
 import { createDatabase } from "typeorm-extension";
 
-export const options = {
+export const options: DataSourceOptions = {
   type: "sqlite",
   database: "data/data.sqlite",
   entities: ["src/models/*.ts"],
-  logging: true,
+  logging: false,
   synchronize: true,
 };
 
-export const datasource = new DataSource(options as any);
+export const datasource = new DataSource(options);
 
 export const initDb = async () => {
   await createDatabase({
-    options: options as any,
+    options: options,
     ifNotExist: true,
     synchronize: true,
   });
