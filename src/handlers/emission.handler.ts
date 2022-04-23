@@ -27,19 +27,17 @@ export const getEmissions = async (req: Request, res: Response) => {
   };
   const parseResult = requestSchema.safeParse(inputs);
   if (!parseResult.success) {
-    res
-      .status(400)
-      .json({
-        message: parseResult.error.errors
-          .map(error => `Field: ${error.path}, Error: ${error.message}`)
-          .join(";"),
-      });
+    res.status(400).json({
+      message: parseResult.error.errors
+        .map(error => `Field: ${error.path}, Error: ${error.message}`)
+        .join(";"),
+    });
     return;
   }
   const { id, startYear, endYear, data } = parseResult.data;
   const country = await CountryController.getCountry(id);
   if (!country) {
-    res.status(403).json({ message: `Country ${id} not found` });
+    res.status(404).json({ message: `Country ${id} not found` });
     return;
   }
   if (startYear > endYear) {
