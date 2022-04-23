@@ -25,10 +25,15 @@ export const getEmissions = async (req: Request, res: Response) => {
     endYear: req.query.endYear,
     data: [req.query.data].flat(),
   };
-  console.log(inputs);
   const parseResult = requestSchema.safeParse(inputs);
   if (!parseResult.success) {
-    res.status(400).json(parseResult.error.errors);
+    res
+      .status(400)
+      .json({
+        message: parseResult.error.errors
+          .map(error => `Field: ${error.path}, Error: ${error.message}`)
+          .join(";"),
+      });
     return;
   }
   const { id, startYear, endYear, data } = parseResult.data;
