@@ -4,7 +4,7 @@ import Map, { Layer, Source } from "react-map-gl";
 import { useEffect, useState } from "react";
 import { constants } from "./constants";
 import { getCountryEmissions } from "./helpers/getCountryEmissons";
-import { range } from "./utils";
+import { Controls } from "./components/Controls";
 
 type CountryGeoJSON = {
   type: "FeatureCollection";
@@ -67,36 +67,12 @@ function App() {
   return (
     <div className="App">
       <h1>Emissions </h1>
-      <div className="controls">
-        <div className="control">
-          <label>Year</label>
-          <select
-            value={year}
-            onChange={e => setYear(parseInt(e.target.value))}
-          >
-            {range(1990, 2015).map(year => (
-              <option value={year} key={year}>
-                {year}
-              </option>
-            ))}
-          </select>
-        </div>
-        <div className="control">
-          <label>Dataset</label>
-          <select
-            value={dataset}
-            onChange={e => setDataset(e.target.value as Dataset)}
-          >
-            <option value="CO2">Carbon Dioxide</option>
-            <option value="HFCs">Hydrofluorocarbon</option>
-            <option value="CH4">Methane</option>
-            <option value="NF3">Nitrogen trifluoride</option>
-            <option value="N2O">Nitrous oxide</option>
-            <option value="PFCs">Perfluorochemicals</option>
-            <option value="SF6">Sulphur Hexafluoride</option>
-          </select>
-        </div>
-      </div>
+      <Controls
+        year={year}
+        dataset={dataset}
+        setYear={setYear}
+        setDataset={setDataset}
+      />
       <Map
         mapboxAccessToken={constants.mapboxToken}
         initialViewState={{
