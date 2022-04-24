@@ -5,6 +5,7 @@ import { useEffect, useState } from "react";
 import { constants } from "./constants";
 import { getCountryEmissions } from "./helpers/getCountryEmissons";
 import { Controls } from "./components/Controls";
+import { CountryDetails } from "./components/CountryDetails";
 
 type CountryGeoJSON = {
   type: "FeatureCollection";
@@ -27,8 +28,10 @@ function App() {
     useState<CountryGeoJSON | null>(null);
   const [dataset, setDataset] = useState<Dataset>("CO2");
   const [year, setYear] = useState(1990);
-  const [country, setCountry] = useState("");
+  const [countryId, setCountryId] = useState("");
+  const [countryName, setCountryName] = useState("");
   const [emissions, setEmissions] = useState(0);
+  const [showModal, setShowModal] = useState(false);
   useEffect(() => {
     setLoading(true);
     fetch("/api/country")
@@ -71,8 +74,10 @@ function App() {
   const clickHandler = (e: any) => {
     const { properties } = e.features[0];
     console.log(properties);
-    setCountry(properties.ADMIN + ", " + properties.ISO_A3);
-    setEmissions(properties.emisson || 0);
+    setCountryId(properties.ISO_A3);
+    setCountryName(properties.ADMIN);
+    setEmissions(properties.emisson);
+    setShowModal(true);
   };
   return (
     <div className="App">
@@ -109,6 +114,11 @@ function App() {
           />
           <Layer type="line" id="borders" paint={{ "line-color": "#FAFAFA" }} />
         </Source>
+        <CountryDetails
+          isOpen={showModal}
+          onDismiss={() => setShowModal(false)}
+          data={{ countryId, countryName, year, emission: emissions, dataset }}
+        />
       </Map>
     </div>
   );
