@@ -1,0 +1,8 @@
+.dialog {
+  display: flex;
+  flex-direction: column;
+}
+
+.chart {
+  flex: 1;
+}
