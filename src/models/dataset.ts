@@ -6,7 +6,7 @@ export const dataset = z.enum([
   "CH4",
   "NF3",
   "N2O",
-  "PFC",
+  "PFCs",
   "SF6",
 ]);
 
