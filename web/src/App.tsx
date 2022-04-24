@@ -20,6 +20,7 @@ type CountryGeoJSON = {
 };
 
 function App() {
+  const [loading, setLoading] = useState(false);
   const [countries, setCounties] = useState<CountryView[]>([]);
   const [geoJson, setGeoJson] = useState<CountryGeoJSON | null>(null);
   const [geoJsonWithEmissons, setGeoJsonWithEmissons] =
@@ -29,13 +30,20 @@ function App() {
   const [country, setCountry] = useState("");
   const [emissions, setEmissions] = useState(0);
   useEffect(() => {
-    fetch("/api/country").then(async res => setCounties(await res.json()));
+    setLoading(true);
+    fetch("/api/country")
+      .then(async res => setCounties(await res.json()))
+      .then(() => setLoading(false));
   }, []);
   useEffect(() => {
-    fetch(constants.geoJsonUrl).then(async res => setGeoJson(await res.json()));
+    setLoading(true);
+    fetch(constants.geoJsonUrl)
+      .then(async res => setGeoJson(await res.json()))
+      .then(() => setLoading(false));
   }, []);
   useEffect(() => {
     if (!geoJson) return;
+    setLoading(true);
     const countryIds = countries.map(country => country.id);
     const geoJsonWithEmissions: CountryGeoJSON = JSON.parse(
       JSON.stringify(geoJson)
@@ -56,7 +64,9 @@ function App() {
         properties.emisson = emission;
         properties.emissionScale = Math.round((emission / 6122746.61) * 10);
       }) || []
-    ).then(() => setGeoJsonWithEmissons(geoJsonWithEmissions));
+    )
+      .then(() => setGeoJsonWithEmissons(geoJsonWithEmissions))
+      .then(() => setLoading(false));
   }, [countries, geoJson, year, dataset]);
   const clickHandler = (e: any) => {
     const { properties } = e.features[0];
@@ -66,7 +76,7 @@ function App() {
   };
   return (
     <div className="App">
-      <h1>Emissions </h1>
+      <h1 style={{ color: loading ? "red" : "green" }}>Emissions</h1>
       <Controls
         year={year}
         dataset={dataset}
