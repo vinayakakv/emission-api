@@ -8,8 +8,10 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "mapbox-gl": "^2.8.2",
     "react": "^18.0.0",
-    "react-dom": "^18.0.0"
+    "react-dom": "^18.0.0",
+    "react-map-gl": "^7.0.11"
   },
   "devDependencies": {
     "@types/react": "^18.0.0",
