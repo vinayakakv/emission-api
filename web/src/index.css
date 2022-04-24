@@ -3,6 +3,13 @@ body,
 #root {
   height: 100%;
   width: 100%;
+  overflow: hidden;
+}
+
+h1,
+h2,
+h3 {
+  margin: 0.2rem;
 }
 
 body {
