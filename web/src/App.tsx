@@ -1,43 +1,76 @@
-import { useState } from "react";
-import logo from "./logo.svg";
 import "./App.css";
+import Map, { Layer, Source } from "react-map-gl";
+import { useEffect, useMemo, useState } from "react";
+import { constants } from "./constants";
 
 function App() {
-  const [count, setCount] = useState(0);
-
+  const [geoJson, setGeoJson] = useState({});
+  const [country, setCountry] = useState("");
+  const [emissions, setEmissions] = useState(0);
+  useEffect(() => {
+    (async () => {
+      const { type, features } = await fetch(constants.geoJsonUrl).then(res =>
+        res.json()
+      );
+      const updatedFeatures = {
+        type,
+        features: features.map(({ properties, ...rest }: any) => ({
+          ...rest,
+          properties: { ...properties, emissions: Math.random() * 10 },
+        })),
+      };
+      setGeoJson(updatedFeatures);
+    })();
+  }, []);
+  const clickHandler = (e: any) => {
+    const { properties } = e.features[0];
+    console.log(properties);
+    setCountry(properties.ADMIN + ", " + properties.ISO_A3);
+    setEmissions(properties.emissions);
+  };
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>Hello Vite + React!</p>
-        <p>
-          <button type="button" onClick={() => setCount(count => count + 1)}>
-            count is: {count}
-          </button>
-        </p>
-        <p>
-          Edit <code>App.tsx</code> and save to test HMR updates.
-        </p>
-        <p>
-          <a
-            className="App-link"
-            href="https://reactjs.org"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Learn React
-          </a>
-          {" | "}
-          <a
-            className="App-link"
-            href="https://vitejs.dev/guide/features.html"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Vite Docs
-          </a>
-        </p>
-      </header>
+      <h1>Mapbox Test</h1>
+      <h2>
+        Clicked Country: {country} , Emissions: {emissions.toFixed(2)}
+      </h2>
+      <Map
+        mapboxAccessToken={constants.mapboxToken}
+        initialViewState={{
+          longitude: 100,
+          latitude: 40,
+          zoom: 1,
+        }}
+        style={{ width: "100%", height: "100%" }}
+        mapStyle="mapbox://styles/vinayakakv/cl2734xmz005914nvtp4byajn"
+        interactiveLayerIds={["countries"]}
+        onClick={clickHandler}
+      >
+        <Source type="geojson" data={geoJson as any}>
+          <Layer
+            type="fill"
+            id="countries"
+            paint={{
+              "fill-opacity": 0.3,
+              "fill-color": {
+                property: "emissions",
+                stops: [
+                  [0, "#3288bd"],
+                  [1, "#66c2a5"],
+                  [2, "#abdda4"],
+                  [3, "#e6f598"],
+                  [4, "#ffffbf"],
+                  [5, "#fee08b"],
+                  [6, "#fdae61"],
+                  [7, "#f46d43"],
+                  [8, "#d53e4f"],
+                ],
+              },
+            }}
+          />
+          <Layer type="line" id="borders" paint={{ "line-color": "#FAFAFA" }} />
+        </Source>
+      </Map>
     </div>
   );
 }
