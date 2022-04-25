@@ -9,6 +9,8 @@ initDb();
 
 app.use("/static", express.static("static"));
 
+app.use(express.static("web/dist"));
+
 app.use(
   "/api-docs",
   swaggerUi.serve,
