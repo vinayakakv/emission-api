@@ -1,5 +1,6 @@
 import Dialog from "@reach/dialog";
 import { VictoryChart, VictoryAxis, VictoryLine } from "victory";
+import { EmissionRecord } from "../../helpers/getCountryEmissons";
 import "./styles.css";
 
 type Props = {
@@ -11,18 +12,13 @@ type Props = {
     dataset: string;
     emission?: number;
     year: number;
+    historicalData: EmissionRecord[];
   };
 };
 
-const emissionHistory = [
-  { year: 1998, data: { CO2: 1 } },
-  { year: 1999, data: { CO2: 2 } },
-  { year: 2000, data: { CO2: 1 } },
-  { year: 2001, data: { CO2: 2.35 } },
-];
-
 export function CountryDetails({ isOpen, onDismiss, data }: Props) {
-  const { countryId, countryName, dataset, emission, year } = data;
+  const { countryId, countryName, dataset, emission, year, historicalData } =
+    data;
   return (
     <Dialog
       as="div"
@@ -43,18 +39,27 @@ export function CountryDetails({ isOpen, onDismiss, data }: Props) {
         </b>{" "}
         {emission !== undefined ? `${emission} kiloTonn` : "Data not available"}
       </p>
-      <VictoryChart domainPadding={30}>
-        <VictoryAxis
-          tickValues={emissionHistory.map(emission => emission.year)}
-        />
-        <VictoryAxis dependentAxis tickFormat={x => `${x}`} />
-        <VictoryLine
-          height={200}
-          data={emissionHistory}
-          x="year"
-          y={data => data.data.CO2}
-        />
-      </VictoryChart>
+      {historicalData.length > 0 && (
+        <VictoryChart domainPadding={30}>
+          <VictoryAxis
+            tickFormat={x => `${x}`}
+            label="Year"
+            style={{ axisLabel: { padding: 30 } }}
+          />
+          <VictoryAxis
+            dependentAxis
+            tickFormat={(x: number) => `${x}`}
+            label="Emissions (kiloTonn)"
+            style={{ axisLabel: { padding: 30 } }}
+          />
+          <VictoryLine
+            height={200}
+            data={historicalData}
+            x="year"
+            y={({ data }) => data[dataset]}
+          />
+        </VictoryChart>
+      )}
 
       <button onClick={onDismiss}>Okay</button>
     </Dialog>

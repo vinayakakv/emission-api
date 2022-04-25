@@ -3,7 +3,10 @@ import "./App.css";
 import Map, { Layer, Source } from "react-map-gl";
 import { useEffect, useState } from "react";
 import { constants } from "./constants";
-import { getCountryEmissions } from "./helpers/getCountryEmissons";
+import {
+  EmissionRecord,
+  getCountryEmissions,
+} from "./helpers/getCountryEmissons";
 import { Controls } from "./components/Controls";
 import { CountryDetails } from "./components/CountryDetails";
 
@@ -32,6 +35,10 @@ function App() {
   const [countryName, setCountryName] = useState("");
   const [emissions, setEmissions] = useState(0);
   const [showModal, setShowModal] = useState(false);
+  const countryIds = countries.map(country => country.id);
+  const [countryEmissions, setCountryEmissions] = useState<EmissionRecord[]>(
+    []
+  );
   useEffect(() => {
     setLoading(true);
     fetch("/api/country")
@@ -47,7 +54,6 @@ function App() {
   useEffect(() => {
     if (!geoJson) return;
     setLoading(true);
-    const countryIds = countries.map(country => country.id);
     const geoJsonWithEmissions: CountryGeoJSON = JSON.parse(
       JSON.stringify(geoJson)
     );
@@ -71,13 +77,30 @@ function App() {
       .then(() => setGeoJsonWithEmissons(geoJsonWithEmissions))
       .then(() => setLoading(false));
   }, [countries, geoJson, year, dataset]);
+  useEffect(() => {
+    const country = countries.find(country => country.id === countryId);
+    if (!country) {
+      setCountryEmissions([]);
+      return;
+    }
+    const { startYear, endYear } = country;
+    setLoading(true);
+    getCountryEmissions({
+      datasets: [dataset],
+      startYear,
+      endYear,
+      countryId,
+    })
+      .then(emissions => setCountryEmissions(emissions))
+      .then(() => setLoading(false));
+  }, [countryId]);
   const clickHandler = (e: any) => {
     const { properties } = e.features[0];
     console.log(properties);
     setCountryId(properties.ISO_A3);
     setCountryName(properties.ADMIN);
     setEmissions(properties.emisson);
-    setShowModal(true);
+    !loading && setShowModal(true);
   };
   return (
     <div className="App">
@@ -117,7 +140,14 @@ function App() {
         <CountryDetails
           isOpen={showModal}
           onDismiss={() => setShowModal(false)}
-          data={{ countryId, countryName, year, emission: emissions, dataset }}
+          data={{
+            countryId,
+            countryName,
+            year,
+            emission: emissions,
+            dataset,
+            historicalData: countryEmissions,
+          }}
         />
       </Map>
     </div>
