@@ -93,7 +93,7 @@ function App() {
     })
       .then(emissions => setCountryEmissions(emissions))
       .then(() => setLoading(false));
-  }, [countryId]);
+  }, [countryId, dataset]);
   const clickHandler = (e: any) => {
     const { properties } = e.features[0];
     console.log(properties);
